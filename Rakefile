@@ -7,10 +7,11 @@ begin
     gem.name = "mega_mutex"
     gem.summary = %Q{Cross-process mutex using MemCache}
     gem.description = %Q{Cross-process mutex using MemCache}
-    gem.email = "grillpanda@gmail.com"
-    gem.homepage = "http://github.com/grillpanda/mega_mutex"
-    gem.authors = ["Matt Johnson"]
-    gem.add_development_dependency "thoughtbot-shoulda"
+    gem.email = "developers@songkick.com"
+    gem.homepage = "http://github.com/songkick/mega_mutex"
+    gem.authors = ["Matt Johnson", "Matt Wynne"]
+    gem.add_dependency 'memcache-client'
+    gem.add_dependency 'logging', '>= 1.1.4'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
@@ -18,29 +19,7 @@ rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
-require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/*_test.rb'
-  test.verbose = true
-end
-
-begin
-  require 'rcov/rcovtask'
-  Rcov::RcovTask.new do |test|
-    test.libs << 'test'
-    test.pattern = 'test/**/*_test.rb'
-    test.verbose = true
-  end
-rescue LoadError
-  task :rcov do
-    abort "RCov is not available. In order to run rcov, you must: sudo gem install spicycode-rcov"
-  end
-end
-
-task :test => :check_dependencies
-
-task :default => :test
+task :default => :build
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
