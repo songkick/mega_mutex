@@ -23,9 +23,9 @@ namespace :github do
   task :push do
     remotes = `git remote`.split("\n")
     unless remotes.include?('github')
-      `git remote add github git@github.com:songkick/mega_mutex.git`
+      sh('git remote add github git@github.com:songkick/mega_mutex.git')
     end
-    `git push github master`
+    sh('git push github master')
   end
 end
 
@@ -43,7 +43,7 @@ end
 
 task :spec => :check_dependencies
 
-task :default => [:spec, 'github:push']
+task :default => [:spec, 'github:push', 'gemcutter:release']
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
