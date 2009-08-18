@@ -111,6 +111,8 @@ module MegaMutex
     describe "with a timeout" do
       include MegaMutex
       it "should raise an error if the code blocks for longer than the timeout" do
+        # TODO: this fails sometimes, and I presume it's when the second thread doesn't start quickly enough
+        # meaning the first mutex has finished, and the timeout doesn't happen.
         @success = false
         threads = []
         threads << Thread.new{ with_cross_process_mutex('foo'){ sleep 2 } }

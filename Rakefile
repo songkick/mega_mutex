@@ -19,6 +19,16 @@ rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
+namespace :github do
+  task :push do
+    remotes = `git remote`.split("\n")
+    unless remotes.include?('github')
+      `git remote add github git@github.com:songkick/mega_mutex.git`
+    end
+    `git push github master`
+  end
+end
+
 require 'spec/rake/spectask'
 Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.libs << 'lib' << 'spec'
@@ -33,7 +43,7 @@ end
 
 task :spec => :check_dependencies
 
-task :default => :spec
+task :default => [:spec, 'github:push']
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
