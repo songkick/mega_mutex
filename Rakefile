@@ -10,7 +10,7 @@ begin
     gem.email = "developers@songkick.com"
     gem.homepage = "http://github.com/songkick/mega_mutex"
     gem.authors = ["Matt Johnson", "Matt Wynne"]
-    gem.add_dependency 'memcache-client'
+    gem.add_dependency 'memcache-client', '>= 1.7.4'
     gem.add_dependency 'logging', '>= 1.1.4'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
@@ -19,7 +19,21 @@ rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
-task :default => :build
+require 'spec/rake/spectask'
+Spec::Rake::SpecTask.new(:spec) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.spec_files = FileList['spec/**/*_spec.rb']
+end
+
+Spec::Rake::SpecTask.new(:rcov) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.pattern = 'spec/**/*_spec.rb'
+  spec.rcov = true
+end
+
+task :spec => :check_dependencies
+
+task :default => :spec
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
