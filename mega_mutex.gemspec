@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/songkick/mega_mutex}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.4}
   s.summary = %q{Cross-process mutex using MemCache}
   s.test_files = [
     "spec/lib/mega_mutex_spec.rb"
