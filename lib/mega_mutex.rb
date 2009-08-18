@@ -1,4 +1,6 @@
+require 'rubygems'
 $:.push File.expand_path(File.dirname(__FILE__))
+
 require 'mega_mutex/cross_process_mutex'
 
 # == Why
