@@ -55,5 +55,22 @@ module MegaMutex
     mutex = CrossProcessMutex.new(mutex_id, options[:timeout])
     mutex.run(&block)
   end
+  
+  class Configuration
+    attr_accessor :memcache_servers
 
+    def initialize
+      @memcache_servers = 'localhost'
+    end
+  end
+
+  class << self
+    def configure
+      yield configuration
+    end
+
+    def configuration
+      @configuration ||= Configuration.new
+    end
+  end
 end
