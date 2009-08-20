@@ -1,20 +1,12 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../lib/mega_mutex')
-
-# Logging::Logger[:root].add_appenders(Logging::Appenders.stdout)
+require File.dirname(__FILE__) + '/../spec_helper'
 
 module MegaMutex
   describe MegaMutex do
     def logger
       Logging::Logger['Specs']
     end
-
-    before(:all) do
-      @old_abort_on_exception_value = Thread.abort_on_exception
-      Thread.abort_on_exception = true
-    end
-    after(:all) do
-      Thread.abort_on_exception = @old_abort_on_exception_value
-    end
+    
+    abort_on_thread_exceptions
 
     describe "two blocks, one fast, one slow" do
       before(:each) do
@@ -29,10 +21,9 @@ module MegaMutex
 
       describe "with no lock" do
         it "trying to run the block twice should raise an error" do
-          threads = []
           threads << Thread.new(&@mutually_exclusive_block)
           threads << Thread.new(&@mutually_exclusive_block)
-          threads.each{ |t| t.join }
+          wait_for_threads_to_finish
           @errors.should_not be_empty
         end
       end
@@ -51,11 +42,10 @@ module MegaMutex
         [2, 20].each do |n|
           describe "when #{n} blocks try to run at the same instant in the same process" do
             it "should run each in turn" do
-              threads = []
               n.times do
                 threads << Thread.new{ with_cross_process_mutex(mutex_id, &@mutually_exclusive_block) }
               end
-              threads.each{ |t| t.join }
+              wait_for_threads_to_finish
               @errors.should be_empty
             end
           end
@@ -110,21 +100,27 @@ module MegaMutex
   
     describe "with a timeout" do
       include MegaMutex
+
       it "should raise an error if the code blocks for longer than the timeout" do
-        # TODO: this fails sometimes, and I presume it's when the second thread doesn't start quickly enough
-        # meaning the first mutex has finished, and the timeout doesn't happen.
-        @success = false
-        threads = []
-        threads << Thread.new{ with_cross_process_mutex('foo'){ sleep 2 } }
+        @exception = nil
+        @first_thread_has_started = false
         threads << Thread.new do
-          begin
-            with_cross_process_mutex('foo', :timeout => 1 ){ puts 'nobody will ever hear me scream' } 
-          rescue MegaMutex::TimeoutError
-            @success = true
+          with_cross_process_mutex('foo') do
+            @first_thread_has_started = true
+            sleep 0.2
           end
         end
-        threads.each{ |t| t.join }
-        @success.should be_true
+        threads << Thread.new do
+          sleep 0.1 until @first_thread_has_started
+          begin
+            with_cross_process_mutex('foo', :timeout => 0.1 ) do
+              raise 'this code should never run'
+            end
+          rescue Exception => @exception
+          end
+        end
+        wait_for_threads_to_finish
+        assert @exception.is_a?(MegaMutex::TimeoutError), "Expected TimeoutError to be raised, but wasn't"
       end
     end
   end
