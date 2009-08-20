@@ -1,6 +1,5 @@
 require 'rubygems'
-$:.push File.expand_path(File.dirname(__FILE__))
-
+$:.push File.expand_path(File.dirname(__FILE__)) unless $:.include?(File.expand_path(File.dirname(__FILE__)))
 require 'mega_mutex/cross_process_mutex'
 
 # == Why
@@ -57,5 +56,23 @@ module MegaMutex
     mutex = CrossProcessMutex.new(mutex_id, options[:timeout])
     mutex.run(&block)
   end
+  
+  class Configuration
+    attr_accessor :memcache_servers
 
+    def initialize
+      @memcache_servers = 'localhost'
+    end
+  end
+
+  class << self
+    def configure
+      yield configuration
+    end
+
+    def configuration
+      @configuration ||= Configuration.new
+    end
+  end
 end
+

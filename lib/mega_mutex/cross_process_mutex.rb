@@ -6,24 +6,6 @@ module MegaMutex
 
   class CrossProcessMutex
 
-    class Configuration
-      attr_accessor :memcache_servers
-
-      def initialize
-        @memcache_servers = 'localhost'
-      end
-    end
-
-    class << self
-      def configure
-        yield configuration
-      end
-
-      def configuration
-        @configuration ||= Configuration.new
-      end
-    end
-    
     def initialize(key, timeout = nil)
       @key = key
       @timeout = timeout
@@ -94,7 +76,7 @@ module MegaMutex
     end
 
     def cache
-      @cache ||= MemCache.new self.class.configuration.memcache_servers, :namespace => 'mega_mutex'
+      @cache ||= MemCache.new MegaMutex.configuration.memcache_servers, :namespace => 'mega_mutex'
     end
   end
 end
