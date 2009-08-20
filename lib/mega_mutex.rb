@@ -1,4 +1,4 @@
-$:.push File.expand_path(File.dirname(__FILE__))
+$:.push File.expand_path(File.dirname(__FILE__)) unless $:.include?(File.expand_path(File.dirname(__FILE__)))
 require 'mega_mutex/cross_process_mutex'
 
 # == Why
@@ -74,3 +74,4 @@ module MegaMutex
     end
   end
 end
+
