@@ -40,6 +40,10 @@ require 'mega_mutex/cross_process_mutex'
 #       config.memcache_servers = ['mc1', 'mc2']
 #     end
 module MegaMutex
+  
+  def self.get_current_lock(mutex_id)
+    CrossProcessMutex.new(mutex_id).current_lock
+  end
 
   ## 
   # Wraps code that should only be run when the mutex has been obtained.
@@ -58,10 +62,11 @@ module MegaMutex
   end
   
   class Configuration
-    attr_accessor :memcache_servers
+    attr_accessor :memcache_servers, :namespace
 
     def initialize
       @memcache_servers = 'localhost'
+      @namespace = 'mega_mutex'
     end
   end
 

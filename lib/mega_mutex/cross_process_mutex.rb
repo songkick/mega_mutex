@@ -27,6 +27,10 @@ module MegaMutex
       log "Unlocking Mutex."
     end
     
+    def current_lock
+      cache.get(@key)
+    end
+    
   private
   
     def timeout?
@@ -63,10 +67,6 @@ module MegaMutex
       current_lock == my_lock_id
     end
     
-    def current_lock
-      cache.get(@key)
-    end
-    
     def set_current_lock(new_lock)
       cache.add(@key, my_lock_id)      
     end
@@ -76,7 +76,7 @@ module MegaMutex
     end
 
     def cache
-      @cache ||= MemCache.new MegaMutex.configuration.memcache_servers, :namespace => 'mega_mutex'
+      @cache ||= MemCache.new MegaMutex.configuration.memcache_servers, :namespace => MegaMutex.configuration.namespace
     end
   end
 end
