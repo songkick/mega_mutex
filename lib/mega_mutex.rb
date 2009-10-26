@@ -58,7 +58,30 @@ module MegaMutex
   #   end
   def with_cross_process_mutex(mutex_id, options = {}, &block)
     mutex = CrossProcessMutex.new(mutex_id, options[:timeout])
-    mutex.run(&block)
+    begin
+      mutex.run(&block)
+    rescue Object => e
+      mega_mutex_insert_into_backtrace(
+        e, 
+        /mega_mutex\.rb.*with_cross_process_mutex/, 
+        "MegaMutex lock #{mutex_id}"
+      )
+      raise e
+    end
+  end
+
+  # inserts a line into a backtrace at the correct location
+  def mega_mutex_insert_into_backtrace(exception, re, newline)
+    loc = nil
+    exception.backtrace.each_with_index do |line, index|
+      if line =~ re
+        loc = index
+        break
+      end
+    end
+    if loc
+      exception.backtrace.insert(loc, newline)
+    end
   end
   
   class Configuration
