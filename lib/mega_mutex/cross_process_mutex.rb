@@ -6,6 +6,12 @@ module MegaMutex
 
   class CrossProcessMutex
 
+    class << self
+      def cache
+        @cache ||= MemCache.new MegaMutex.configuration.memcache_servers, :namespace => MegaMutex.configuration.namespace
+      end
+    end
+
     def initialize(key, timeout = nil)
       @key = key
       @timeout = timeout
@@ -76,7 +82,7 @@ module MegaMutex
     end
 
     def cache
-      @cache ||= MemCache.new MegaMutex.configuration.memcache_servers, :namespace => MegaMutex.configuration.namespace
+      self.class.cache
     end
   end
 end
