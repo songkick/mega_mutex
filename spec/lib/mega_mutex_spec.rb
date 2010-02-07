@@ -43,7 +43,7 @@ module MegaMutex
           describe "when #{n} blocks try to run at the same instant in the same process" do
             it "should run each in turn" do
               n.times do
-                threads << Thread.new{ with_cross_process_mutex(mutex_id, &@mutually_exclusive_block) }
+                threads << Thread.new{ with_distributed_mutex(mutex_id, &@mutually_exclusive_block) }
               end
               wait_for_threads_to_finish
               @errors.should be_empty
@@ -53,14 +53,14 @@ module MegaMutex
 
         describe "when the first block raises an exception" do
           before(:each) do
-            with_cross_process_mutex(mutex_id) do
+            with_distributed_mutex(mutex_id) do
               raise "Something went wrong in my code"
             end rescue nil
           end
 
           it "the second block should find that the lock is clear and it can run" do
             @success = nil
-            with_cross_process_mutex(mutex_id) do
+            with_distributed_mutex(mutex_id) do
               @success = true
             end
             @success.should be_true
@@ -86,8 +86,8 @@ module MegaMutex
 
           it "should run each in turn" do
             pids = []
-            pids << fork { with_cross_process_mutex(mutex_id, &@mutually_exclusive_block); Kernel.exit! }
-            pids << fork { with_cross_process_mutex(mutex_id, &@mutually_exclusive_block); Kernel.exit! }
+            pids << fork { with_distributed_mutex(mutex_id, &@mutually_exclusive_block); Kernel.exit! }
+            pids << fork { with_distributed_mutex(mutex_id, &@mutually_exclusive_block); Kernel.exit! }
             pids.each{ |p| Process.wait(p) }
             if File.exists?(@errors_file)
               raise "Expected no errors but found #{File.read(@errors_file)}"
@@ -105,7 +105,7 @@ module MegaMutex
         @exception = nil
         @first_thread_has_started = false
         threads << Thread.new do
-          with_cross_process_mutex('foo') do
+          with_distributed_mutex('foo') do
             @first_thread_has_started = true
             sleep 0.2
           end
@@ -113,7 +113,7 @@ module MegaMutex
         threads << Thread.new do
           sleep 0.1 until @first_thread_has_started
           begin
-            with_cross_process_mutex('foo', :timeout => 0.1 ) do
+            with_distributed_mutex('foo', :timeout => 0.1 ) do
               raise 'this code should never run'
             end
           rescue Exception => @exception

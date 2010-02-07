@@ -4,7 +4,7 @@ require 'memcache'
 module MegaMutex
   class TimeoutError < Exception; end
 
-  class CrossProcessMutex
+  class DistributedMutex
 
     class << self
       def cache
@@ -23,7 +23,7 @@ module MegaMutex
 
     def run(&block)
       @start_time = Time.now
-      log "Attempting to lock cross-process mutex..."
+      log "Attempting to lock mutex..."
       lock!
       log "Locked. Running critical section..."
       yield
