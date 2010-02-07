@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{mega_mutex}
-  s.version = "0.2.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matt Johnson", "Matt Wynne"]
-  s.date = %q{2009-08-18}
+  s.date = %q{2010-02-07}
   s.description = %q{Cross-process mutex using MemCache}
   s.email = %q{developers@songkick.com}
   s.extra_rdoc_files = [
@@ -24,17 +24,19 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "lib/mega_mutex.rb",
-     "lib/mega_mutex/cross_process_mutex.rb",
+     "lib/mega_mutex/distributed_mutex.rb",
      "mega_mutex.gemspec",
-     "spec/lib/mega_mutex_spec.rb"
+     "spec/lib/mega_mutex_spec.rb",
+     "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/songkick/mega_mutex}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.4}
+  s.rubygems_version = %q{1.3.5}
   s.summary = %q{Cross-process mutex using MemCache}
   s.test_files = [
-    "spec/lib/mega_mutex_spec.rb"
+    "spec/lib/mega_mutex_spec.rb",
+     "spec/spec_helper.rb"
   ]
 
   if s.respond_to? :specification_version then

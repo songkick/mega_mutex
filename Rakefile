@@ -5,8 +5,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "mega_mutex"
-    gem.summary = %Q{Cross-process mutex using MemCache}
-    gem.description = %Q{Cross-process mutex using MemCache}
+    gem.summary = %Q{Distributed mutex for Ruby}
+    gem.description = %Q{Distributed mutex for Ruby}
     gem.email = "developers@songkick.com"
     gem.homepage = "http://github.com/songkick/mega_mutex"
     gem.authors = ["Matt Johnson", "Matt Wynne"]

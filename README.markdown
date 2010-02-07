@@ -30,7 +30,12 @@ Suppose you have a ThingMaker:
 
 Now, thanks to the magic of MegaMutex, you can be sure that all processes trying to run this code will wait their turn, so each one will have the chance to make exactly the right number of things, without anyone else poking their nose in.
 
-## Configuration
+## Install
+
+    sudo gem install mega_mutex
+
+
+## Configure
 
 MegaMutex uses [memcache-client](http://seattlerb.rubyforge.org/memcache-client/) to store the mutex, so your infrastructure must be set up to use memcache servers.
 
@@ -39,7 +44,7 @@ By default, MegaMutex will attempt to connect to a memcache on the local machine
     MegaMutex.configure do |config|
       config.memcache_servers = ['mc1', 'mc2']
     end
-    
+
 ## Help
 
 MegaMutex was built by the [Songkick.com](http://www.songkick.com) development team. Come chat to us on [#songkick](irc://chat.freenode.net/#songkick) on freenode.net.
