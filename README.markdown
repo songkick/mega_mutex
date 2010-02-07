@@ -39,6 +39,10 @@ By default, MegaMutex will attempt to connect to a memcache on the local machine
     MegaMutex.configure do |config|
       config.memcache_servers = ['mc1', 'mc2']
     end
+    
+## Help
+
+MegaMutex was built by the [Songkick.com](http://www.songkick.com) development team. Come chat to us on [#songkick](irc://chat.freenode.net/#songkick) on freenode.net.
 
 ## Copyright
 
