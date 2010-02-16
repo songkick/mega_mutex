@@ -1,0 +1,4 @@
+== 0.3.0
+
+Bugfixes:
+  * #with_distributed_mutex was not returning the result of the block
