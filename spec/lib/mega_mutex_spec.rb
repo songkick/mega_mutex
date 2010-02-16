@@ -2,11 +2,20 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 module MegaMutex
   describe MegaMutex do
+    include MegaMutex
+
     def logger
       Logging::Logger['Specs']
     end
     
     abort_on_thread_exceptions
+
+    describe "#with_distributed_mutex" do
+      it "returns the value returned by the block" do
+        result = with_distributed_mutex(nil) { 12345 }
+        result.should == 12345
+      end
+    end
 
     describe "two blocks, one fast, one slow" do
       before(:each) do
@@ -36,8 +45,6 @@ module MegaMutex
         def mutex_id
           'tests-mutex-key'
         end
-
-        include MegaMutex
 
         [2, 20].each do |n|
           describe "when #{n} blocks try to run at the same instant in the same process" do
@@ -99,7 +106,6 @@ module MegaMutex
     end
   
     describe "with a timeout" do
-      include MegaMutex
 
       it "should raise an error if the code blocks for longer than the timeout" do
         @exception = nil

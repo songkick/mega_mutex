@@ -26,8 +26,9 @@ module MegaMutex
       log "Attempting to lock mutex..."
       lock!
       log "Locked. Running critical section..."
-      yield
+      result = yield
       log "Critical section complete. Unlocking..."
+      result
     ensure
       unlock!
       log "Unlocking Mutex."
