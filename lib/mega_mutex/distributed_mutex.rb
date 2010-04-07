@@ -1,10 +1,12 @@
 require 'logging'
 require 'memcache'
+require 'retryable'
 
 module MegaMutex
   class TimeoutError < Exception; end
 
   class DistributedMutex
+    include Retryable
 
     class << self
       def cache
@@ -53,8 +55,10 @@ module MegaMutex
 
     def lock!
       until timeout?
-        return if attempt_to_lock == my_lock_id
-        sleep 0.1
+        retryable(:tries => 5, :sleep => 30, :on => MemCache::MemCacheError, :matching => /IO timeout/) do
+          return if attempt_to_lock == my_lock_id
+          sleep 0.1
+        end
       end
       raise TimeoutError.new("Failed to obtain a lock within #{@timeout} seconds.")
     end
@@ -67,7 +71,9 @@ module MegaMutex
     end
     
     def unlock!
-      cache.delete(@key) if locked_by_me?
+      retryable(:tries => 5, :sleep => 30, :on => MemCache::MemCacheError, :matching => /IO timeout/) do
+        cache.delete(@key) if locked_by_me?
+      end
     end
     
     def locked_by_me?
