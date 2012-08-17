@@ -6,7 +6,6 @@ module MegaMutex
   class TimeoutError < Exception; end
 
   class DistributedMutex
-    include Retryable
 
     class << self
       def cache
