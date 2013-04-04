@@ -39,19 +39,9 @@ Gem::Specification.new do |s|
      "spec/spec_helper.rb"
   ]
 
-  if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 3
+  s.add_runtime_dependency(%q<memcache-client>, [">= 1.7.4"])
+  s.add_runtime_dependency(%q<logging>, [">= 1.1.4"])
+  s.add_development_dependency("rspec", ["= 1.3.0"])
+  s.add_development_dependency("rake", [">= 1.0"])
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<memcache-client>, [">= 1.7.4"])
-      s.add_runtime_dependency(%q<logging>, [">= 1.1.4"])
-    else
-      s.add_dependency(%q<memcache-client>, [">= 1.7.4"])
-      s.add_dependency(%q<logging>, [">= 1.1.4"])
-    end
-  else
-    s.add_dependency(%q<memcache-client>, [">= 1.7.4"])
-    s.add_dependency(%q<logging>, [">= 1.1.4"])
-  end
 end
