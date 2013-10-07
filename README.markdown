@@ -37,7 +37,7 @@ Now, thanks to the magic of MegaMutex, you can be sure that all processes trying
 
 ## Configure
 
-MegaMutex uses [memcache-client](http://seattlerb.rubyforge.org/memcache-client/) to store the mutex, so your infrastructure must be set up to use memcache servers.
+MegaMutex uses Dalii to store the mutex, so your infrastructure must be set up to use memcache servers.
 
 By default, MegaMutex will attempt to connect to a memcache on the local machine, but you can configure any number of servers like so:
 
