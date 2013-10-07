@@ -7,12 +7,12 @@ module MegaMutex
     def logger
       Logging::Logger['Specs']
     end
-    
+
     abort_on_thread_exceptions
 
     describe "#with_distributed_mutex" do
       it "returns the value returned by the block" do
-        result = with_distributed_mutex(nil) { 12345 }
+        result = with_distributed_mutex("foo-#{rand(1000000)}") { 12345 }
         result.should == 12345
       end
     end
@@ -39,7 +39,7 @@ module MegaMutex
 
       describe "with the same lock key" do
         before(:each) do
-          MemCache.new('localhost').delete(mutex_id)
+          Dalli::Client.new('localhost').delete(mutex_id)
         end
 
         def mutex_id
@@ -104,7 +104,7 @@ module MegaMutex
 
       end
     end
-  
+
     describe "with a timeout" do
 
       it "should raise an error if the code blocks for longer than the timeout" do

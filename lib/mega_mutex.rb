@@ -3,23 +3,23 @@ $:.push File.expand_path(File.dirname(__FILE__)) unless $:.include?(File.expand_
 require 'mega_mutex/distributed_mutex'
 
 # == Why
-# 
+#
 # Sometimes I need to do this:
-# 
+#
 #     unless enough_things?
 #       make_more_things
 #     end
-#     
+#
 # If I'm running several processes in parallel, I can get a race condition that means two of the processes both think there are not enough things. So we go and make some more, even though we don't need to.
-# 
+#
 # == How
-# 
+#
 # Suppose you have a ThingMaker:
-# 
+#
 #     class ThingMaker
 #       include MegaMutex
-#       
-#       def ensure_just_enough_things  
+#
+#       def ensure_just_enough_things
 #         with_cross_process_mutex("ThingMaker Mutex ID") do
 #           unless enough_things?
 #             make_more_things
@@ -27,27 +27,27 @@ require 'mega_mutex/distributed_mutex'
 #         end
 #       end
 #     end
-# 
+#
 # Now, thanks to the magic of MegaMutex, you can be sure that all processes trying to run this code will wait their turn, so each one will have the chance to make exactly the right number of things, without anyone else poking their nose in.
-# 
+#
 # == Configuration
-# 
+#
 # MegaMutex uses http://seattlerb.rubyforge.org/memcache-client/ to store the mutex, so your infrastructure must be set up to use memcache servers.
-# 
+#
 # By default, MegaMutex will attempt to connect to a memcache on the local machine, but you can configure any number of servers like so:
-# 
+#
 #     MegaMutex.configure do |config|
 #       config.memcache_servers = ['mc1', 'mc2']
 #     end
 module MegaMutex
-  
+
   def self.get_current_lock(mutex_id)
     DistributedMutex.new(mutex_id).current_lock
   end
 
-  ## 
+  ##
   # Wraps code that should only be run when the mutex has been obtained.
-  # 
+  #
   # The mutex_id uniquely identifies the section of code being run.
   #
   # You can optionally specify a :timeout to control how long to wait for the lock to be released
@@ -62,8 +62,8 @@ module MegaMutex
       mutex.run(&block)
     rescue Object => e
       mega_mutex_insert_into_backtrace(
-        e, 
-        /mega_mutex\.rb.*with_(distributed|cross_process)_mutex/, 
+        e,
+        /mega_mutex\.rb.*with_(distributed|cross_process)_mutex/,
         "MegaMutex lock #{mutex_id}"
       )
       raise e
@@ -84,7 +84,7 @@ module MegaMutex
       exception.backtrace.insert(loc, newline)
     end
   end
-  
+
   class Configuration
     attr_accessor :memcache_servers, :namespace
 

@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{mega_mutex}
-  s.version = "0.2.1"
+  s.version = "0.3.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matt Johnson", "Matt Wynne"]
@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
      "spec/spec_helper.rb"
   ]
 
-  s.add_runtime_dependency(%q<memcache-client>, [">= 1.7.4"])
+  s.add_runtime_dependency(%q<dalli>, ["~> 2"])
   s.add_runtime_dependency(%q<logging>, [">= 1.1.4"])
   s.add_development_dependency("rspec", ["= 1.3.0"])
   s.add_development_dependency("rake", [">= 1.0"])
