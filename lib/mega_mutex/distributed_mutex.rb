@@ -11,9 +11,10 @@ module MegaMutex
       end
     end
 
-    def initialize(key, timeout = nil)
+    def initialize(key, timeout = nil, ttl = nil)
       @key = key
       @timeout = timeout
+      @ttl = ttl
     end
 
     def logger
@@ -74,7 +75,7 @@ module MegaMutex
     end
 
     def set_current_lock(new_lock)
-      cache.add(@key, my_lock_id)
+      cache.add(@key, my_lock_id, @ttl)
     end
 
     def my_lock_id
