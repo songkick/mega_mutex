@@ -129,5 +129,25 @@ module MegaMutex
         assert @exception.is_a?(MegaMutex::TimeoutError), "Expected TimeoutError to be raised, but wasn't"
       end
     end
+
+    describe 'with a TTL' do
+      it "should release the lock after the TTL has expired" do
+        messages = []
+
+        threads << Thread.new do
+          with_distributed_mutex('foo', :ttl => 0.2) do
+            sleep 0.4
+            messages << 'Second message'
+          end
+        end
+        threads << Thread.new do
+          with_distributed_mutex('foo') { messages << 'First message' }
+        end
+
+        wait_for_threads_to_finish
+        messages.first.should eq('First message')
+        messages.first.should eq('Second message')
+      end
+    end
   end
 end

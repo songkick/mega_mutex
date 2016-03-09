@@ -56,8 +56,16 @@ module MegaMutex
   #   with_distributed_mutex('my_mutex_id_1234', :timeout => 20) do
   #     do_something!
   #   end
+  #
+  # Additionally, you can specify the amount of time the lock should be valid
+  # for. This is helpful in preventing deadlocks when the lock isn't deleted
+  # for whatever reason.
+  #
+  #   with_distributed_mutex('my_mutex_id_1234', :ttl => 20) do
+  #     do_something!
+  #   end
   def with_distributed_mutex(mutex_id, options = {}, &block)
-    mutex = DistributedMutex.new(mutex_id, options[:timeout])
+    mutex = DistributedMutex.new(mutex_id, options[:timeout], options[:ttl])
     begin
       mutex.run(&block)
     rescue Object => e
