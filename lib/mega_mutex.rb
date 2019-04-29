@@ -37,7 +37,7 @@ require 'mega_mutex/distributed_mutex'
 # By default, MegaMutex will attempt to connect to a redis server on the local machine, but you can configure any number of servers like so:
 #
 #     MegaMutex.configure do |config|
-#       config.redis_servers = ['mc1', 'mc2']
+#       config.redis_servers = {:host => 'xxx', :port => 6379}
 #     end
 module MegaMutex
 
