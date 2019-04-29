@@ -32,12 +32,12 @@ require 'mega_mutex/distributed_mutex'
 #
 # == Configuration
 #
-# MegaMutex uses http://seattlerb.rubyforge.org/memcache-client/ to store the mutex, so your infrastructure must be set up to use memcache servers.
+# MegaMutex Redis to store the mutex, so your infrastructure must be set up to use redis servers.
 #
-# By default, MegaMutex will attempt to connect to a memcache on the local machine, but you can configure any number of servers like so:
+# By default, MegaMutex will attempt to connect to a redis server on the local machine, but you can configure any number of servers like so:
 #
 #     MegaMutex.configure do |config|
-#       config.memcache_servers = ['mc1', 'mc2']
+#       config.redis_servers = ['mc1', 'mc2']
 #     end
 module MegaMutex
 
@@ -86,10 +86,10 @@ module MegaMutex
   end
 
   class Configuration
-    attr_accessor :memcache_servers, :namespace
+    attr_accessor :redis_servers, :namespace
 
     def initialize
-      @memcache_servers = 'localhost'
+      @redis_servers = {:host => 'redis.dev', :port => 6379}
       @namespace = 'mega_mutex'
     end
   end

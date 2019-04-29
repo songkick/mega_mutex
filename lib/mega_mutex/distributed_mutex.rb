@@ -1,5 +1,5 @@
 require 'logging'
-require 'dalli'
+require 'redis'
 
 module MegaMutex
   class TimeoutError < Exception; end
@@ -7,7 +7,7 @@ module MegaMutex
   class DistributedMutex
     class << self
       def cache
-        @cache ||= Dalli::Client.new MegaMutex.configuration.memcache_servers, :namespace => MegaMutex.configuration.namespace
+        @cache ||= Redis.new MegaMutex.configuration.redis_servers#, :namespace => MegaMutex.configuration.namespace
       end
     end
 
@@ -66,7 +66,7 @@ module MegaMutex
     end
 
     def unlock!
-      cache.delete(@key) if locked_by_me?
+      cache.del(@key) if locked_by_me?
     end
 
     def locked_by_me?
@@ -74,7 +74,7 @@ module MegaMutex
     end
 
     def set_current_lock(new_lock)
-      cache.add(@key, my_lock_id)
+      cache.set(@key, my_lock_id)
     end
 
     def my_lock_id

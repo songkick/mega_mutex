@@ -39,7 +39,7 @@ module MegaMutex
 
       describe "with the same lock key" do
         before(:each) do
-          Dalli::Client.new('localhost').delete(mutex_id)
+          Redis.new({:host => 'redis.dev', :port => 6379}).delete(mutex_id)
         end
 
         def mutex_id

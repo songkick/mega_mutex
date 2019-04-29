@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{mega_mutex}
-  s.version = "0.3.2"
+  s.version = "0.3.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matt Johnson", "Matt Wynne"]
   s.date = %q{2010-02-07}
-  s.description = %q{Cross-process mutex using MemCache}
+  s.description = %q{Cross-process mutex using redis}
   s.email = %q{developers@songkick.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -33,13 +33,13 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
-  s.summary = %q{Cross-process mutex using MemCache}
+  s.summary = %q{Cross-process mutex using redis}
   s.test_files = [
     "spec/lib/mega_mutex_spec.rb",
      "spec/spec_helper.rb"
   ]
 
-  s.add_runtime_dependency(%q<dalli>, ["~> 2"])
+  s.add_runtime_dependency(%q<redis>, ["~> 4"])
   s.add_runtime_dependency(%q<logging>, [">= 1.1.4"])
   s.add_development_dependency("rspec", ["= 1.3.0"])
   s.add_development_dependency("rake", [">= 1.0"])

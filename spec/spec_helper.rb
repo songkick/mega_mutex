@@ -19,7 +19,7 @@ module ThreadExampleHelper
   def threads
     @threads ||= []
   end
-  
+
   def wait_for_threads_to_finish
     threads.each{ |t| t.join }
   end

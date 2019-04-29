@@ -9,7 +9,7 @@ Sometimes I need to do this:
     unless enough_things?
       make_more_things
     end
-    
+
 If I'm running several processes in parallel, I can get a race condition that means two of the processes both think there are not enough things. So we go and make some more, even though we don't need to.
 
 ## How
@@ -18,8 +18,8 @@ Suppose you have a ThingMaker:
 
     class ThingMaker
       include MegaMutex
-      
-      def ensure_just_enough_things  
+
+      def ensure_just_enough_things
         with_distributed_mutex("ThingMaker Mutex ID") do
           unless enough_things?
             make_more_things
@@ -37,12 +37,12 @@ Now, thanks to the magic of MegaMutex, you can be sure that all processes trying
 
 ## Configure
 
-MegaMutex uses Dalii to store the mutex, so your infrastructure must be set up to use memcache servers.
+MegaMutex uses Dalii to store the mutex, so your infrastructure must be set up to use redis servers.
 
-By default, MegaMutex will attempt to connect to a memcache on the local machine, but you can configure any number of servers like so:
+By default, MegaMutex will attempt to connect to a redis on the local machine, but you can configure any number of servers like so:
 
     MegaMutex.configure do |config|
-      config.memcache_servers = ['mc1', 'mc2']
+      config.redis_servers = {:host => 'xxx', :port => 6379}
     end
 
 ## Help
