@@ -75,6 +75,8 @@ module MegaMutex
 
     def set_current_lock(new_lock)
       cache.set(@key, my_lock_id)
+      # expire redis key after 1 hour
+      cache.expire(@key, 3600)
     end
 
     def my_lock_id
