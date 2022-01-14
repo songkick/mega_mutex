@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require_relative '../spec_helper'
 
 module MegaMutex
   describe MegaMutex do
@@ -39,7 +39,7 @@ module MegaMutex
 
       describe "with the same lock key" do
         before(:each) do
-          Redis.new({:host => 'redis.dev', :port => 6379}).delete(mutex_id)
+          Redis.new({:host => 'redis.dev', :port => 6379}).del(mutex_id)
         end
 
         def mutex_id
@@ -106,7 +106,6 @@ module MegaMutex
     end
 
     describe "with a timeout" do
-
       it "should raise an error if the code blocks for longer than the timeout" do
         @exception = nil
         @first_thread_has_started = false
@@ -126,7 +125,8 @@ module MegaMutex
           end
         end
         wait_for_threads_to_finish
-        assert @exception.is_a?(MegaMutex::TimeoutError), "Expected TimeoutError to be raised, but wasn't"
+
+        @exception.should be_kind_of(MegaMutex::TimeoutError), "Expected TimeoutError to be raised, but wasn't"
       end
     end
   end

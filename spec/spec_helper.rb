@@ -1,5 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../lib/mega_mutex')
-require 'test/unit/assertions'
+require_relative '../lib/mega_mutex'
 
 # Logging::Logger[:root].add_appenders(Logging::Appenders.stdout)
 
@@ -28,5 +27,4 @@ end
 Spec::Runner.configure do |config|
   config.extend ThreadHelper
   config.include ThreadExampleHelper
-  config.include Test::Unit::Assertions
 end

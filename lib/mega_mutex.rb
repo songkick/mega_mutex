@@ -104,4 +104,3 @@ module MegaMutex
     end
   end
 end
-
