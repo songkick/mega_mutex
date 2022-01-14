@@ -42,6 +42,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency(%q<redis>, ["~> 4"])
   s.add_runtime_dependency(%q<logging>, [">= 1.1.4"])
   s.add_development_dependency("rspec", ["= 1.3.0"])
-  s.add_development_dependency("rake", [">= 1.0"])
+  s.add_development_dependency("rake", ["< 11.0"])
 
 end
