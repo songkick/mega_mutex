@@ -1,8 +1,9 @@
 require 'logging'
 require 'dalli'
+require "byebug"
 
 module MegaMutex
-  class TimeoutError < Exception; end
+  class TimeoutError < RuntimeError; end
 
   class DistributedMutex
     class << self

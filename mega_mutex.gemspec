@@ -39,9 +39,10 @@ Gem::Specification.new do |s|
      "spec/spec_helper.rb"
   ]
 
-  s.add_runtime_dependency(%q<dalli>, ["~> 2"])
+  s.add_runtime_dependency(%q<dalli>, ["~> 3"])
   s.add_runtime_dependency(%q<logging>, [">= 1.1.4"])
-  s.add_development_dependency("rspec", ["= 1.3.0"])
-  s.add_development_dependency("rake", [">= 1.0"])
 
+  s.add_development_dependency("byebug", ["~> 11.1.3"])
+  s.add_development_dependency("rake", ["~> 13.0.6"])
+  s.add_development_dependency("rspec", ["~> 3.12.0"])
 end
