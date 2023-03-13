@@ -70,7 +70,7 @@ module MegaMutex
             with_distributed_mutex(mutex_id) do
               @success = true
             end
-            @success.should be_true
+            @success.should be_truthy
           end
         end
 
@@ -119,14 +119,15 @@ module MegaMutex
         threads << Thread.new do
           sleep 0.1 until @first_thread_has_started
           begin
-            with_distributed_mutex('foo', :timeout => 0.1 ) do
+            with_distributed_mutex('foo', timeout: 0.1) do
               raise 'this code should never run'
             end
-          rescue Exception => @exception
+          rescue MegaMutex::TimeoutError => e
+            @exception = e
           end
         end
         wait_for_threads_to_finish
-        assert @exception.is_a?(MegaMutex::TimeoutError), "Expected TimeoutError to be raised, but wasn't"
+        expect(@exception.class).to be(MegaMutex::TimeoutError)
       end
     end
 
@@ -135,18 +136,21 @@ module MegaMutex
         messages = []
 
         threads << Thread.new do
-          with_distributed_mutex('foo', :ttl => 0.2) do
-            sleep 0.4
+          sleep 0.3
+          with_distributed_mutex('foo', ttl: 0.2) do
             messages << 'Second message'
           end
         end
+
         threads << Thread.new do
-          with_distributed_mutex('foo') { messages << 'First message' }
+          with_distributed_mutex('foo') do
+            messages << 'First message'
+          end
         end
 
         wait_for_threads_to_finish
-        messages.first.should eq('First message')
-        messages.first.should eq('Second message')
+        expect(messages[0]).to eq('First message')
+        expect(messages[1]).to eq('Second message')
       end
     end
   end
