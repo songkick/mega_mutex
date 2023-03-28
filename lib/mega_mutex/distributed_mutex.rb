@@ -1,6 +1,5 @@
 require 'logging'
 require 'dalli'
-require "byebug"
 
 module MegaMutex
   class TimeoutError < RuntimeError; end
